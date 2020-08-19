@@ -1,0 +1,11 @@
+version: '3'
+services:
+
+  evcc:
+    image: andig/evcc
+    volumes:
+      - ./evcc.yaml:/etc/evcc.yaml
+      - ./actions:/var/log/evcc/actions
+    ports:
+    - 7070:7070
+#    command: evcc meter

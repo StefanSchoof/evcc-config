@@ -1,0 +1,73 @@
+meters:
+- name: pv
+  type: modbus
+  uri: pv.fritz.box:502
+  id: 1
+#  energy: ?
+- name: grid
+  type: default
+  power:
+     type: http
+     uri: http://zaehler.fritz.box/data/976ee3f0-dc81-11ea-9cfe-a104ca6585c2.json?from=now
+     jq: .data.tuples[0][1]
+
+chargers:
+- name: idcharger
+  type: default
+  status:
+    type: script
+    cmd: /bin/sh -c "echo status >> /var/log/evcc/actions/log.txt && echo C"
+  enabled:
+    type: script
+    cmd: /bin/sh -c "echo enabled >> /var/log/evcc/actions/log.txt && echo true"
+  enable:
+    type: script
+    cmd: /bin/sh -c "echo enable $1 >> /var/log/evcc/actions/log.txt"
+  maxcurrent:
+    type: script
+    cmd: /bin/sh -c "echo maxcurrent $1 >> /var/log/evcc/actions/log.txt"
+
+vehicles:
+- name: ID3
+  type: default
+  title: ID.3
+  capacity: 58 # kWh
+  charge:
+    type: script
+    cmd: /bin/sh -c "echo vehcharge >> /var/log/evcc/actions/log.txt && echo 10"
+  cache: 5m
+
+  site:
+  title: Home
+  meters:
+    grid: grid
+    pv: pv
+
+loadpoints:
+ - title: Carport
+   charger: idcharger
+   vehicle: ID.3
+   mode: pv
+   targetSoC: 80
+   soc:
+     alwaysUpdate: false # set true to update vehicle soc even when disconnected
+     estimate: false # set true to interpolate between api updates
+     levels: # target soc levels for UI
+     - 30
+     - 50
+     - 80
+     - 100
+#   onDisconnect: # set defaults when vehicle disconnects
+#     mode: pv # switch back to pv mode
+#     targetSoC: 100 # charge to 100%
+#   phases: 3 # ev phases (default 3)
+#   sensitivity: 1 # current raise/lower step size (default 10A)
+   enable: # pv mode enable behavior
+     delay: 1m # threshold must be exceeded for this long
+     threshold: 500 # minimum export power (W). If zero, export must exceed minimum charge power to enable
+   disable: # pv mode disable behavior
+      delay: 5m # threshold must be exceeded for this long
+      threshold: 200 # maximum import power (W)
+#   guardduration: 10m # switch charger contactor not more often than this (default 10m)
+#   mincurrent: 6 # minimum charge current (default 6A)
+#   maxcurrent: 16 # maximum charge current (default 16A)
