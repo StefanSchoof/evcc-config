@@ -1,10 +1,8 @@
 meters:
 - name: pv
-  type: default
-  power:
-    type: http
-    uri: http://zaehler.fritz.box/data/920911a0-dba9-11ea-981f-e7babc04fcc7.json?from=now
-    jq: .data.tuples[0][1]
+  type: modbus
+  uri: pv.fritz.box:502
+  id: 1
 - name: grid
   type: default
   power:

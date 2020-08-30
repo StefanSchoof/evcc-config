@@ -8,4 +8,3 @@ services:
       - ./actions:/var/log/evcc/actions
     ports:
     - 7070:7070
-#    command: evcc meter
