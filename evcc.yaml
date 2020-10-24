@@ -7,7 +7,7 @@ meters:
   type: default
   power:
      type: http
-     uri: http://zaehler.fritz.box/data/1d7e23a0-e3c9-11ea-b4ec-c32d6de10e8b.json?from=now
+     uri: http://zaehler.fritz.box/data/0ac639c0-f00d-11ea-84e5-f3ea1b6ff20f.json?from=now
      jq: .data.tuples[0][1]
 
 chargers:
@@ -47,8 +47,8 @@ loadpoints:
    charger: idcharger
    vehicle: ID3
    mode: pv
-   targetSoC: 80
    soc:
+     target: 80
      alwaysUpdate: false # set true to update vehicle soc even when disconnected
      estimate: false # set true to interpolate between api updates
      levels: # target soc levels for UI
