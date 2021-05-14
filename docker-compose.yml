@@ -1,10 +1,22 @@
 version: '3'
 services:
 
+  id3charger:
+    image: evcc-id3-charger
+    env_file:
+    - .env
+    networks:
+    - evcc
   evcc:
     image: andig/evcc
+    env_file:
+    - .env
     volumes:
-      - ./evcc.yaml:/etc/evcc.yaml
-      - ./actions:/var/log/evcc/actions
+      - ./evcc-tmpl.yaml:/etc/evcc-tmpl.yaml
     ports:
     - 7070:7070
+    networks:
+    - evcc
+    command: /bin/sh -c "sed -e \"s/<vin>/$vin/\" -e \"s/<mail>/$mail/\" -e \"s/<password>/$password/\" -e \"s#<influxurl>#$influxurl#\" -e \"s/<influxtoken>/$influxtoken/\" /etc/evcc-tmpl.yaml > /etc/evcc.yaml && evcc"
+networks:
+  evcc:

@@ -1,3 +1,4 @@
+interval: 60s
 meters:
 - name: pv
   type: modbus
@@ -14,27 +15,35 @@ chargers:
 - name: idcharger
   type: default
   status:
-    type: script
-    cmd: /bin/sh -c "echo status >> /var/log/evcc/actions/log.txt && echo C"
+    type: http
+    uri: http://id3charger:8080/status
+    timeout: 60s
   enabled:
-    type: script
-    cmd: /bin/sh -c "echo enabled ${enable} >> /var/log/evcc/actions/log.txt && echo true"
+    type: http
+    uri: http://id3charger:8080/enabled
+    timeout: 60s
   enable:
-    type: script
-    cmd: /bin/sh -c "echo enable >> /var/log/evcc/actions/log.txt"
+    type: http
+    uri: http://id3charger:8080/enable
+    method: post
+    timeout: 60s
+    headers:
+      content-type: "text/plain"
   maxcurrent:
-    type: script
-    cmd: /bin/sh -c "echo maxcurrent ${maxcurrent} >> /var/log/evcc/actions/log.txt"
+    type: http
+    uri: http://id3charger:8080/maxcurrent
+    method: post
+    headers:
+      content-type: "text/plain"
 
 vehicles:
-- name: ID3
-  type: default
+- type: id
+  name: ID3
   title: ID.3
   capacity: 58 # kWh
-  charge:
-    type: script
-    cmd: /bin/sh -c "echo vehcharge >> /var/log/evcc/actions/log.txt && echo 10"
-  cache: 5m
+  user: <mail>
+  password: <password>
+  vin: <vin>
 
 site:
   title: Home
@@ -59,14 +68,19 @@ loadpoints:
 #   onDisconnect: # set defaults when vehicle disconnects
 #     mode: pv # switch back to pv mode
 #     targetSoC: 100 # charge to 100%
-#   phases: 3 # ev phases (default 3)
+   phases: 3 # ev phases (default 3)
 #   sensitivity: 1 # current raise/lower step size (default 10A)
    enable: # pv mode enable behavior
      delay: 1m # threshold must be exceeded for this long
-     threshold: 500 # minimum export power (W). If zero, export must exceed minimum charge power to enable
+     threshold: -5500 # minimum export power (W). If zero, export must exceed minimum charge power to enable
    disable: # pv mode disable behavior
       delay: 5m # threshold must be exceeded for this long
-      threshold: 200 # maximum import power (W)
+      threshold: 400 # maximum import power (W)
 #   guardduration: 10m # switch charger contactor not more often than this (default 10m)
-#   mincurrent: 6 # minimum charge current (default 6A)
-#   maxcurrent: 16 # maximum charge current (default 16A)
+   mincurrent: 8 # minimum charge current (default 6A)
+   maxcurrent: 8 # maximum charge current (default 16A)
+
+influx:
+  url: <influxurl>
+  database: evcc
+  token: <influxtoken>
