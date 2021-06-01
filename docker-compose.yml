@@ -1,14 +1,8 @@
 version: '3'
 services:
 
-  id3charger:
-    image: evcc-id3-charger
-    env_file:
-    - .env
-    networks:
-    - evcc
   evcc:
-    image: andig/evcc
+    image: stefanschoof/evcc:virtualid
     env_file:
     - .env
     volumes:
@@ -18,5 +12,6 @@ services:
     networks:
     - evcc
     command: /bin/sh -c "sed -e \"s/<vin>/$vin/\" -e \"s/<mail>/$mail/\" -e \"s/<password>/$password/\" -e \"s#<influxurl>#$influxurl#\" -e \"s/<influxtoken>/$influxtoken/\" /etc/evcc-tmpl.yaml > /etc/evcc.yaml && evcc"
+    restart: always
 networks:
   evcc:

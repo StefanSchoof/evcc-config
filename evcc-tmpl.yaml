@@ -1,4 +1,6 @@
-interval: 60s
+#interval: 60s
+levels:
+  virtualid: debug
 meters:
 - name: pv
   type: modbus
@@ -13,28 +15,10 @@ meters:
 
 chargers:
 - name: idcharger
-  type: default
-  status:
-    type: http
-    uri: http://id3charger:8080/status
-    timeout: 60s
-  enabled:
-    type: http
-    uri: http://id3charger:8080/enabled
-    timeout: 60s
-  enable:
-    type: http
-    uri: http://id3charger:8080/enable
-    method: post
-    timeout: 60s
-    headers:
-      content-type: "text/plain"
-  maxcurrent:
-    type: http
-    uri: http://id3charger:8080/maxcurrent
-    method: post
-    headers:
-      content-type: "text/plain"
+  type: virtualid
+  user: <mail>
+  password: <password>
+  vin: <vin>
 
 vehicles:
 - type: id
