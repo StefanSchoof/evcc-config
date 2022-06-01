@@ -1,8 +1,9 @@
 version: '3'
 services:
-
   evcc:
     image: stefanschoof/evcc:virtualid
+    container_name: evcc
+    restart: unless-stopped
     env_file:
     - .env
     volumes:
@@ -10,8 +11,13 @@ services:
     ports:
     - 7070:7070
     networks:
-    - evcc
+    - traefik
     command: /bin/sh -c "sed -e \"s/<vin>/$vin/\" -e \"s/<mail>/$mail/\" -e \"s/<password>/$password/\" -e \"s#<influxurl>#$influxurl#\" -e \"s/<influxtoken>/$influxtoken/\" /etc/evcc-tmpl.yaml > /etc/evcc.yaml && evcc"
-    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.evcc.loadbalancer.server.port=7070"
+      - "com.centurylinklabs.watchtower.monitor-only=true"
+
 networks:
-  evcc:
+  traefik:
+    external: true
