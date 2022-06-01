@@ -7,10 +7,10 @@ meters:
   uri: pv.fritz.box:502
   id: 1
 - name: grid
-  type: default
+  type: custom
   power:
      type: http
-     uri: http://zaehler.fritz.box/data/0ac639c0-f00d-11ea-84e5-f3ea1b6ff20f.json?from=now
+     uri: http://zaehler.fritz.box:8080/data/0ac639c0-f00d-11ea-84e5-f3ea1b6ff20f.json?from=now
      jq: .data.tuples[0][1]
 
 chargers:
@@ -42,29 +42,32 @@ loadpoints:
    mode: pv
    soc:
      target: 80
-     alwaysUpdate: false # set true to update vehicle soc even when disconnected
+#     alwaysUpdate: false # set true to update vehicle soc even when disconnected
      estimate: false # set true to interpolate between api updates
-     levels: # target soc levels for UI
-     - 30
-     - 50
-     - 80
-     - 100
-#   onDisconnect: # set defaults when vehicle disconnects
-#     mode: pv # switch back to pv mode
-#     targetSoC: 100 # charge to 100%
+   onDisconnect: # set defaults when vehicle disconnects
+     mode: pv # switch back to pv mode
+     targetSoC: 80 # charge to 80%
    phases: 3 # ev phases (default 3)
 #   sensitivity: 1 # current raise/lower step size (default 10A)
    enable: # pv mode enable behavior
      delay: 1m # threshold must be exceeded for this long
-     threshold: -5500 # minimum export power (W). If zero, export must exceed minimum charge power to enable
+     threshold: -5300 # minimum export power (W). If zero, export must exceed minimum charge power to enable
    disable: # pv mode disable behavior
       delay: 5m # threshold must be exceeded for this long
-      threshold: 400 # maximum import power (W)
+      threshold: 300 # maximum import power (W)
 #   guardduration: 10m # switch charger contactor not more often than this (default 10m)
    mincurrent: 8 # minimum charge current (default 6A)
    maxcurrent: 8 # maximum charge current (default 16A)
 
-influx:
-  url: <influxurl>
-  database: evcc
-  token: <influxtoken>
+#influx:
+#  url: <influxurl>
+#  database: evcc
+#  token: <influxtoken>
+
+tariffs:
+  grid:
+    type: fixed
+    price: 0.3055 # EUR/kWh
+  feedin:
+    type: fixed
+    price: 0.123 # EUR/kWh
