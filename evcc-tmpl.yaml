@@ -59,10 +59,10 @@ loadpoints:
    mincurrent: 8 # minimum charge current (default 6A)
    maxcurrent: 8 # maximum charge current (default 16A)
 
-#influx:
-#  url: <influxurl>
-#  database: evcc
-#  token: <influxtoken>
+influx:
+  url: <influxurl>
+  database: evcc
+  token: <influxtoken>
 
 tariffs:
   grid:
