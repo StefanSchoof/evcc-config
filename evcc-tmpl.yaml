@@ -67,7 +67,7 @@ influx:
 tariffs:
   grid:
     type: fixed
-    price: 0.3055 # EUR/kWh
+    price: 0.2952 # EUR/kWh
   feedin:
     type: fixed
     price: 0.123 # EUR/kWh
